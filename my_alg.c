@@ -114,6 +114,71 @@ void replace_obj_id(int **obj_id, int n, int t, int width, int height)
  *************************************************************/
 int assign_id(unsigned char *img, int width, int height, int **obj_id)
 {
+
+	
+	/*物体の領域を抽出する*/
+	int n = 0; /*物体数*/
+	int u,v; /*u:幅 v:高さ*/
+	int m = 0; 
+	int increment = 0;	
+	float count1,count2;
+
+	count1 = 0;
+	count2 = 0;
+
+	/*obj_idを初期化*/
+	for(v=0;v<height;v++){
+	  for(u=0;u<width;u++){
+		if(img[u+v*width] == 0){
+		  count1++;
+		  obj_id[v][u] = 0; 
+		}
+	  }	
+	}
+
+	for(v=0;v<height;v++){
+		for(u=0;u<width;u++){
+
+
+		  if(img[u+v*width] == 0){
+			count2++;	
+
+			if(img[(u-1)+(v-1)*width] == 255 && img[u+(v-1)*width] == 255 && img[(u+1)+(v-1)*width] == 255 && img[(u-1)+v*width] == 255){
+
+				if(obj_id[v][u+1] == 0 || obj_id[v+1][u-1] == 0 || obj_id[v+1][u] == 0 || obj_id[v+1][u+1] == 0){
+					obj_id[v][u] = ++n;	
+				}	
+
+			}
+
+
+			if(obj_id[v-1][u-1] != 0){ /*左上*/
+			  obj_id[v][u] = obj_id[v-1][u-1];
+
+			}else if(obj_id[v][u-1] != 0){ /*左*/
+
+			  obj_id[v][u] = obj_id[v][u-1];
+
+			}else if(obj_id[v-1][u] != 0){ /*上*/
+
+			  obj_id[v][u] = obj_id[v-1][u];
+
+			}else if(obj_id[v-1][u+1] != 0){ /*右上*/
+
+			  obj_id[v][u] = obj_id[v-1][u+1];	
+
+			}
+
+
+		  }else{
+			/*画素値 = 255*/ 
+		  }
+		}	
+	}
+
+  printf("n = %d,count1 = %f,count2 = %f",n,count1,count2);	
+ 	/*物体の矩形を求める*/
+
 	int x, y, s;
 	int count, val = 0;
 
