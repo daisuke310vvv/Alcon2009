@@ -6,6 +6,15 @@ CFLAGS = -Wall -ansi -O2
 LDFLAGS = -lm
 RM = rm
 
+#OpenCVのライブラリを指定
+#OPENCVINC = `pkg-config --CFLAGS opencv`
+#OPENCVLIB = `pkg-config --libs opencv`
+#$(TARGET):$(objs)
+#	$(CC) -o $@ $(objs) $(OPENCVLIB)
+LDFLAGS += `pkg-config opencv --libs` 
+CFLAGS += `pkg-config opencv --cflags` 
+CXXFLAGS += `pkg-config opencv --cflags` 
+
 $(program): $(objs)
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $(program) $(objs)
 
